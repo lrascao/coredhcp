@@ -31,6 +31,9 @@ type Allocator interface {
 	// Free may return a DoubleFreeError if the prefix being returned was not
 	// previously allocated
 	Free(net.IPNet) error
+
+	// Range returns the list of networks configured
+	Range() []net.IPNet
 }
 
 // ErrDoubleFree is an error type returned by Allocator.Free() when a

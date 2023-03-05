@@ -57,6 +57,20 @@ func (a *IPv4Allocator) toOffset(ip net.IP) (uint, error) {
 	return uint(intIP - a.start), nil
 }
 
+// Range returns the allocator range
+func (a *IPv4Allocator) Range() []net.IPNet {
+	ips := make([]net.IPNet, a.end-a.start+1)
+
+	for i := range ips {
+		ips[i] = net.IPNet{
+			IP:   a.toIP(uint32(i)),
+			Mask: net.CIDRMask(32, 32),
+		}
+	}
+
+	return ips
+}
+
 // Allocate reserves an IP for a client
 func (a *IPv4Allocator) Allocate(hint net.IPNet) (n net.IPNet, err error) {
 	n.Mask = net.CIDRMask(32, 32)
