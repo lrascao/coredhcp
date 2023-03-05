@@ -127,6 +127,10 @@ func (l *listener4) HandleMsg4(buf []byte, oob *ipv4.ControlMessage, _peer net.A
 		tmp.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeOffer))
 	case dhcpv4.MessageTypeRequest:
 		tmp.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
+	case dhcpv4.MessageTypeRelease:
+		tmp.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
+	case dhcpv4.MessageTypeDecline:
+		tmp.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
 	default:
 		log.Printf("plugins/server: Unhandled message type: %v", mt)
 		return
