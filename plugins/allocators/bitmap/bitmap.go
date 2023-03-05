@@ -105,6 +105,11 @@ func (a *Allocator) Free(prefix net.IPNet) error {
 	return nil
 }
 
+// Range returns the allocator range
+func (a *Allocator) Range() []net.IPNet {
+	return nil
+}
+
 // NewBitmapAllocator creates a new allocator, allocating /`size` prefixes
 // carved out of the given `pool` prefix
 func NewBitmapAllocator(pool net.IPNet, size int) (*Allocator, error) {
