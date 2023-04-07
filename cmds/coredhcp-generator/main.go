@@ -34,7 +34,10 @@ var funcMap = template.FuncMap{
 		if len(parts) < 1 {
 			return "", fmt.Errorf("no components found in import path '%s'", importPath)
 		}
-		return "pl_" + parts[len(parts)-1], nil
+		name := parts[len(parts)-1]
+		// scrub out '-', it is not allowed in package names
+		name = strings.ReplaceAll(name, "-", "")
+		return "pl_" + name, nil
 	},
 }
 
