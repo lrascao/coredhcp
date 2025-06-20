@@ -6,7 +6,9 @@ package dns
 
 import (
 	"errors"
+	"math/rand"
 	"net"
+	"time"
 
 	"github.com/coredhcp/coredhcp/handler"
 	"github.com/coredhcp/coredhcp/logger"
@@ -74,10 +76,23 @@ func Handler6(req, resp dhcpv6.DHCPv6) (dhcpv6.DHCPv6, bool) {
 	return resp, false
 }
 
-//Handler4 handles DHCPv4 packets for the dns plugin
+// Handler4 handles DHCPv4 packets for the dns plugin
 func Handler4(req, resp *dhcpv4.DHCPv4) (*dhcpv4.DHCPv4, bool) {
+	// randomize the dns server order on every request
 	if req.IsOptionRequested(dhcpv4.OptionDomainNameServer) {
-		resp.Options.Update(dhcpv4.OptDNS(dnsServers4...))
+		resp.Options.Update(dhcpv4.OptDNS(shuffle(dnsServers4)...))
 	}
 	return resp, false
+}
+
+func shuffle(dns []net.IP) []net.IP {
+	rand.Seed(time.Now().UnixNano())
+	shuffled := make([]net.IP, len(dns))
+	copy(shuffled, dns)
+
+	rand.Shuffle(len(shuffled), func(i, j int) {
+		shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+	})
+
+	return shuffled
 }
